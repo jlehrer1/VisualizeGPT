@@ -9,9 +9,14 @@ I am going to provide two things
 1. an example of the first few rows of the pandas DataFrame
 2. a query for what plot to generate
 
-Based on the query, you will write amazing code to create the plot using matplotlib or seaborn. Follow these instructions when creating the plots: 
+Based on the query, you will write amazing code to create the plot using matplotlib, seaborn or plotly. Follow these instructions when creating the plots: 
 
-Make sure to make the plots visually beautiful. Make sure to write concise code. Make sure to sort values when appropriate. When creating plots, no text should overlap. You may rotate text if needed. Do not create any index errors. Write comments to explain what the code should be doing.
+Make sure to make the plots visually beautiful. 
+Make sure to write concise code. 
+Make sure to sort values when appropriate. 
+When creating plots, no text should overlap. 
+You may rotate text if needed. Do not create any index errors. Write comments to explain what the code should be doing.
+If the query asks to use a specific package, use that package. Otherwise, use matplotlib or seaborn.
 
 The most important thing is to make sure the code runs. It is absolutely critical that the code runs. Make sure there are no errors in the code, since that would be very bad. Do not include any instructions. Do not include any imports unless something else besides`matplotlib.pyplot as plt` or `import seaborn as sns` is used. When I am ready for you response, I will end the message with "Response:".  Here is an example:
 
