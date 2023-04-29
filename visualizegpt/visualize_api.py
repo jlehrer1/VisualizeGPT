@@ -2,6 +2,15 @@ import pandas as pd
 import os 
 import openai
 
+global matplotlib 
+import matplotlib
+global plt
+import matplotlib.pyplot as plt
+global sns
+import seaborn as sns
+global np
+import numpy as np
+
 PROMPT = """
 You are visualizeGPT, a language model who is incredible at writing code to create visualizations from pandas dataframes. You are an expert python programmer at matplotlib and seaborn. You are a functional programmer, who highly values clean code. 
 
@@ -18,7 +27,7 @@ When creating plots, no text should overlap.
 You may rotate text if needed. Do not create any index errors. Write comments to explain what the code should be doing.
 If the query asks to use a specific package, use that package. Otherwise, use matplotlib or seaborn.
 
-The most important thing is to make sure the code runs. It is absolutely critical that the code runs. Make sure there are no errors in the code, since that would be very bad. Do not include any instructions. Do not include any imports unless something else besides`matplotlib.pyplot as plt` or `import seaborn as sns` is used. When I am ready for you response, I will end the message with "Response:".  Here is an example:
+The most important thing is to make sure the code runs. It is absolutely critical that the code runs. Make sure there are no errors in the code, since that would be very bad. Do not include any instructions. Include all imports necessary to make the code run. When I am ready for you response, I will end the message with "Response:".  Here is an example:
 
 Example 1:
 Data: 
@@ -42,21 +51,26 @@ Ready? Here is your prompt. It is super important to not use data from the previ
 """
 
 class VisualizeGPT:
-    def __init__(self, df: pd.DataFrame, error_tolerance: int = 3, openai_api_key: str = None):
+    def __init__(self, df: pd.DataFrame, error_tolerance: int = 3, openai_api_key: str = None, temperature: float = 0.0):
         self.df = df
         self.prompt = PROMPT + "\nData:\n" + str(df.head())
         self.error_tolerance = error_tolerance
         self.openai_api_key = openai_api_key
+        self.temperature = temperature
+        self.responses = []
 
-    def __call__(self, query: str) -> str:
+    def __call__(self, query: str, show: bool = True) -> str:
         prompt = self.prompt + "\nQuery: " + query + "\nResponse:"
         response = self.get_code_response_from_llm(prompt)
-        self.response = response
+        response = response.replace("df", "self.df")
+        self.responses.append(response)
 
-        print(response)
+        if show:
+            exec(response, globals(), locals())
+        else:
+            print(response)
 
-    @staticmethod 
-    def get_code_response_from_llm(query: str) -> str:
+    def get_code_response_from_llm(self, query: str) -> str:
         try:
             api_key = os.environ["OPENAI_API_KEY"]
         except KeyError:
@@ -68,8 +82,12 @@ class VisualizeGPT:
             model=model_engine,
             messages=[{"role": "user", "content": query}],
             max_tokens=1000,
-            temperature=0.0,
+            temperature=self.temperature,
         )
         response = response.choices[0].message.content
 
         return response
+
+    @property
+    def response(self):
+        print(self.responses[-1])
