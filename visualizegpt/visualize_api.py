@@ -73,7 +73,6 @@ class VisualizeGPT:
     def __call__(self, query: str, show: bool = True) -> str:
         prompt = self.prompt + "\nQuery: " + query + "\nResponse:"
         response = get_code_response_from_llm(prompt, self.temperature)
-        self.responses.append(response)
 
         if show:
             tries = 0
@@ -90,7 +89,8 @@ class VisualizeGPT:
         else:
             print(response)
 
-        return CodePrompt(code=response, df=self.df, openai_api_key=self.openai_api_key, temperature=self.temperature, error_tolerance=self.error_tolerance)
+        response = CodePrompt(code=response, df=self.df, openai_api_key=self.openai_api_key, temperature=self.temperature, error_tolerance=self.error_tolerance)
+        self.responses.append(response)
 
     @property
     def response(self):
@@ -169,6 +169,12 @@ class CodePrompt:
     @property
     def response(self):
         print(self.responses[-1])
+
+    def __repr__(self) -> str:
+        return self.responses[-1]
+    
+    def __str__(self) -> str:
+        return self.responses[-1]
 
 def get_code_response_from_llm(query: str, temperature: float = 0.0) -> str:
     openai.api_key = os.environ["OPENAI_API_KEY"]
