@@ -13,31 +13,17 @@ The usage is very simple. Export your OpenAI key as an environment variable name
 >>> df = pd.read_csv("my/data/file.csv")
 >>> viz = VisualizeGPT(df)
 
->>> viz("Show me the distribution of Cell Types for each batch. make a grid of subplots and use the blues colorscheme")
-import seaborn as sns
-
-# group the data by batch and cell type, and count the number of occurrences
-batch_counts = df.groupby(['Batch', 'CellType']).size().reset_index(name='Count')
-
-# create a grid of subplots, one for each batch
-g = sns.FacetGrid(batch_counts, col='Batch', col_wrap=3, sharey=False)
-
-# plot a bar chart for each batch, with the cell types on the x-axis and the count on the y-axis
-g.map(sns.barplot, 'CellType', 'Count', palette='Blues_d')
-
-# rotate the x-axis labels to prevent overlap
-for ax in g.axes.flat:
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
-
-# set the title for each subplot
-for ax, title in zip(g.axes.flat, batch_counts['Batch'].unique()):
-    ax.set_title(title)
-
-# set the overall title for the plot
-g.fig.suptitle('Distribution of Cell Types for Each Batch', y=1.05)
-
-# display the plot
-plt.show()
+>>> plot = viz("Show me the distribution of Cell Types for each batch. make a grid of subplots and use the blues colorscheme")
+# shows the plot 
+>>> plot.refine("Now make the y axis log scale and change the colorscheme to rainbow")
+# shows the plot with the requested changes
+>>> plot.refine(...)
 ```
 
+There are two classes. `VisualizeGPT` is the base class which allows you to create visualizations from a DataFrame. When you query
+for a visualization, `CodePrompt` object is returned with a `refine` method that allows you to iterate on your plots.
+
 You can run that code and get the visualization you want :-). Thanks LLMs!
+
+Example:
+![Visualization example](example.png?raw=true "Example of using VisualizeGPT")
