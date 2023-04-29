@@ -21,7 +21,7 @@ The usage is very simple. Export your OpenAI key as an environment variable name
 ```
 
 There are two classes. `VisualizeGPT` is the base class which allows you to create visualizations from a DataFrame. When you query
-for a visualization, `CodePrompt` object is returned with a `refine` method that allows you to iterate on your plots.
+for a visualization, `CodePrompt` object is returned with a `refine` method that allows you to iterate on your plots. You can see the code at the given step with the `CodePrompt().response` attribute, or the `.responses` attribute to see the history of all refinements.
 
 You can run that code and get the visualization you want :-). Thanks LLMs!
 
